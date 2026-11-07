@@ -1,0 +1,5 @@
+# dsh bundle patch：把本插件插入 profile 的层级栈。
+# 宿主侧只做一件事 —— 用 webServer 托管 /cet4/ 下的静态资源（app/ 与 data/）。
+- insert:
+    - id: dsh-cet4
+      name: dsh-cet4

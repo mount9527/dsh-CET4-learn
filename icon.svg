@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="CET-4 训练台">
+  <rect width="64" height="64" rx="14" fill="#2f6df6"/>
+  <rect x="13" y="11" width="38" height="42" rx="6" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="2.4"/>
+  <path d="M39 19 25 37h16" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M39 19v18" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
+</svg>

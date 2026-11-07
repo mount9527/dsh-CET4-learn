@@ -1,0 +1,81 @@
+{
+  "name": "dsh-cet4",
+  "version": "2.2.2",
+  "type": "module",
+  "description": "大学英语四级训练台（DeepSeek Harness 插件）：核心词与大纲词分组背记、听力真题、随机真题练习（选词填空 / 长篇阅读 / 仔细阅读）、片段翻译、作文书写、生词本。题库与录音由使用者自备，包内不含任何真题内容。",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cet4",
+    "english",
+    "vocabulary",
+    "listening"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/mount9527/dsh-CET4-learn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mount9527/dsh-CET4-learn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mount9527/dsh-CET4-learn/issues"
+  },
+  "author": "mount9527",
+  "main": "./index.js",
+  "icon": "./icon.svg",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./lib/client.js",
+    "./icon": "./icon.svg",
+    "./locale/*.json": "./locale/*.json",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "lib",
+    "app",
+    "locale",
+    "icon.svg",
+    "cordis.patch.yml",
+    "build/build.mjs",
+    "build/validate-data.mjs",
+    "build/serve-plugin.mjs",
+    "build/test-client.mjs",
+    "build/e2e.mjs",
+    "LICENSE",
+    "NOTICE.md",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:data": "node build/build.mjs",
+    "check:data": "node build/validate-data.mjs",
+    "preview:plugin": "node build/serve-plugin.mjs 8788",
+    "test:client": "node build/test-client.mjs",
+    "test:e2e": "node build/e2e.mjs",
+    "test": "node build/test-client.mjs && node build/validate-data.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-locale"
+      ]
+    },
+    "manifestVersion": 1
+  }
+}
