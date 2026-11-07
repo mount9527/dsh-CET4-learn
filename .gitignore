@@ -15,3 +15,7 @@ node_modules/
 package-lock.json
 .DS_Store
 Thumbs.db
+# 凭据与本地配置，绝不入库
+.npmrc
+.env
+.env.*
