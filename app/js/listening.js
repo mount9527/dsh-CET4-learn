@@ -246,6 +246,7 @@
                </label>
                <span class="pill" id="tts-state">未播放</span>
              </div>
+             <p class="tts-warn" id="tts-warn" hidden>系统里没有可用的英语语音，示例听力无法朗读。可以导入带录音的题库，或在装有英语语音的系统/浏览器里打开。</p>
              <div class="pieces">${chips}</div>
              <p class="muted" style="margin:-8px 0 16px;font-size:12px">
                这一套是原创示例卷，没有真人录音：点篇目用系统语音朗读该篇，读完自动停；也可以从第 1 篇连着听。
@@ -417,6 +418,28 @@
         const rateSel = document.getElementById('tts-rate');
         let token = 0;
 
+        /* 没有英语语音时不要装作在播：禁用按钮并说明原因，voiceschanged 后自动恢复 */
+        const voicesOk = () => {
+          try {
+            return (synth.getVoices() || []).some((v) => /^en/i.test(v.lang));
+          } catch {
+            return false;
+          }
+        };
+        const warnEl = document.getElementById('tts-warn');
+        const refreshVoices = () => {
+          const ok = voicesOk();
+          if (warnEl) warnEl.hidden = ok;
+          const all = document.getElementById('tts-all');
+          const rate = document.getElementById('tts-rate');
+          if (all) all.disabled = !ok;
+          if (rate) rate.disabled = !ok;
+          document.querySelectorAll('[data-speak]').forEach((b) => {
+            b.disabled = !ok;
+          });
+          if (stateEl && !synth.speaking) stateEl.textContent = ok ? '未播放' : '无可用语音';
+        };
+
         const pickVoice = () => {
           const voices = synth.getVoices() || [];
           return voices.find((v) => /en[-_]US/i.test(v.lang)) || voices.find((v) => /^en/i.test(v.lang)) || null;
@@ -448,6 +471,10 @@
         };
 
         const play = async (fromKey) => {
+          if (!voicesOk()) {
+            refreshVoices();
+            return;
+          }
           const startIdx = fromKey ? ls.passages.findIndex((p) => p.key === fromKey) : 0;
           if (startIdx < 0) return;
           halt();
@@ -502,12 +529,19 @@
             }
           };
 
-        /* 有些环境要先触发一次 getVoices 才有声音列表 */
+        /* 有些环境要先触发一次 getVoices 才有声音列表；voice 列表异步到达时再刷一次 */
         try {
           synth.getVoices();
         } catch {
           /* 忽略 */
         }
+        refreshVoices();
+        try {
+          synth.addEventListener?.('voiceschanged', refreshVoices);
+        } catch {
+          /* 忽略 */
+        }
+        synth.onvoiceschanged = refreshVoices;
       }
 
       /* 原文展开 */
