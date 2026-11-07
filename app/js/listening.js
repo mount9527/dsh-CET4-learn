@@ -29,9 +29,10 @@
         return;
       }
       const stat = idx.audio || {};
+      const synthSets = papers.filter((p) => p.synth).length;
       const periods = new Map();
       for (const p of papers) {
-        const k = `${p.year}年${p.month}月`;
+        const k = p.period || `${p.year}年${p.month}月`;
         if (!periods.has(k)) periods.set(k, []);
         periods.get(k).push(p);
       }
@@ -50,11 +51,14 @@
                   const borrowedFrom = p.audioCopiedFrom ? Number(String(p.audioCopiedFrom).split('-s')[1]) : 0;
                   return `<div class="card" data-paper="${p.id}">
                     <div class="card-icon">🎧</div>
-                    <h3>第 ${p.set} 套</h3>
-                    <p>25 题${p.hasTranscript ? ' · 含录音原文' : ' · 无原文，只听题'} · ${p.hasAudio ? '可在线听' : '无录音'}</p>
+                    <h3>${esc(p.title || `第 ${p.set} 套`)}</h3>
+                    <p>${p.listeningQuestions || 25} 题 · ${
+                      p.synth ? '系统语音朗读' : p.hasTranscript ? '含录音原文' : '无原文，只听题'
+                    } · ${p.synth ? '无真人录音' : p.hasAudio ? '可在线听' : '无录音'}</p>
                     <div class="card-meta">
                       <span class="tag">Section A–C</span>
-                      ${p.hasTranscript ? '<span class="tag">带原文</span>' : ''}
+                      ${p.synth ? '<span class="tag">原创</span>' : ''}
+                      ${p.hasTranscript && !p.synth ? '<span class="tag">带原文</span>' : ''}
                       ${borrowedFrom ? `<span class="tag">沿用第 ${borrowedFrom} 套录音</span>` : ''}
                       ${!p.audioVerified ? '<span class="tag">录音按套号推定</span>' : ''}
                       ${score ? `<span class="tag ${r?.submitted ? 'ok' : 'warn'}">${score}</span>` : ''}
@@ -70,13 +74,19 @@
       CET4.UI.set(`
         <div class="wrap">
           <div class="section-title">
-            <h2>听力真题</h2>
-            <span class="pill">${papers.length} 套 · ${stat.files || '—'} 份录音 · 25 题 / 套</span>
+            <h2>${idx.kind === 'starter' ? '听力练习' : '听力真题'}</h2>
+            <span class="pill">${papers.length} 套 · ${stat.files ? `${stat.files} 份录音 · ` : ''}25 题 / 套</span>
             <span class="spacer"></span>
             <span class="pill">已交卷 ${done}</span>
           </div>
           <p class="muted" style="margin-top:0">
-            录音在本地播放，可以按篇目跳听；题目只给答案，交卷后标出对错，录音原文可自行对照。
+            ${
+              synthSets && synthSets === papers.length
+                ? '这里全是原创示例卷：没有真人录音，点篇目用系统语音朗读该篇，读完自动停。题目只给答案，交卷后标出对错，原文在交卷后才出现。'
+                : `录音在本地播放，可以按篇目跳听；题目只给答案，交卷后标出对错，录音原文可自行对照。${
+                    synthSets ? `其中有 ${synthSets} 套是原创示例卷，没有真人录音，用系统语音合成朗读（音色取决于你的电脑）。` : ''
+                  }`
+            }
             ${
               stat.borrowed
                 ? `其中 ${stat.borrowed} 套的听力与同考期第 1 套相同（真题 PDF 如此注明），录音沿用那一套。`
@@ -133,7 +143,10 @@
         </div>`;
 
       const audioSrc = ls.audio ? CET4.Data.mediaUrl(ls.audio) : '';
-      const pieces = ls.passages.filter((p) => p.start != null);
+      /* 示例卷没有音频文件：用系统语音合成朗读原文（包里不带录音，也就没有录音版权问题） */
+      const synthMode = !audioSrc && !!ls.synth;
+      const canSynth = synthMode && typeof window.speechSynthesis !== 'undefined';
+      const pieces = synthMode ? ls.passages : ls.passages.filter((p) => p.start != null);
 
       const paint = () => {
         document.querySelectorAll('.opt').forEach((el) => {
@@ -152,15 +165,17 @@
 
       const passagesHtml = ls.passages
         .map((p) => {
+          /* 示例卷的原文就是朗读内容：交卷前藏起来，否则等于先看答案 */
+          const scriptOpen = !!p.text && (!synthMode || rec.submitted);
           return `
           <div class="panel panel-pad" style="margin-bottom:16px" id="ps-${p.key}">
             <div class="section-title">
               <h2 style="font-size:15px">Section ${p.section} · ${esc(p.title)}</h2>
               <span class="pill">${p.from}–${p.to} 题</span>
               <span class="spacer"></span>
-              ${p.text ? `<button class="btn btn-ghost btn-sm" data-script="${p.key}">原文</button>` : ''}
+              ${scriptOpen ? `<button class="btn btn-ghost btn-sm" data-script="${p.key}">原文</button>` : ''}
             </div>
-            ${p.text ? `<div class="listen-script" id="sc-${p.key}" hidden>${esc(p.text).replace(/\n{2,}/g, '</p><p>').replace(/^/, '<p>')}</div>` : ''}
+            ${scriptOpen ? `<div class="listen-script" id="sc-${p.key}" hidden>${esc(p.text).replace(/\n{2,}/g, '</p><p>').replace(/^/, '<p>')}</div>` : ''}
             ${p.questions
               .map(
                 (q) => `
@@ -180,45 +195,73 @@
         })
         .join('');
 
+      const chips = pieces
+        .map((p) => {
+          const no = Number(String(p.key).slice(1));
+          const name = { A: '新闻', B: '对话', C: '短文' }[p.section] || '';
+          const tip = synthMode
+            ? `${p.title} · ${p.from}–${p.to} 题 · 朗读这一篇`
+            : `${p.title} · ${p.from}–${p.to} 题 · 从 ${fmt(p.start)} 开始，播完这一段自动停`;
+          return synthMode
+            ? `<button class="piece" data-speak="${p.key}" title="${esc(tip)}">${name}${no}</button>`
+            : `<button class="piece" data-jump="${p.key}" data-start="${p.start}" data-end="${p.end}" title="${esc(tip)}">${name}${no}</button>`;
+        })
+        .join('');
+
+      const audioBlock = audioSrc
+        ? `<div class="audio-bar">
+             <audio id="ls-audio" controls preload="metadata" src="${esc(audioSrc)}"></audio>
+             <div class="audio-side">
+               <label class="rate">倍速
+                 <select id="ls-rate">
+                   <option value="0.75">0.75×</option>
+                   <option value="1" selected>1×</option>
+                   <option value="1.25">1.25×</option>
+                   <option value="1.5">1.5×</option>
+                 </select>
+               </label>
+               <span class="pill" id="ls-pos">00:00</span>
+             </div>
+           </div>
+           ${
+             pieces.length
+               ? `<div class="pieces">${chips}</div>
+                  <p class="muted" style="margin:-8px 0 16px;font-size:12px">
+                    点篇目跳到对应录音，播完这一段自动停；也可以直接拖进度条听全程。
+                  </p>`
+               : `<p class="muted" style="margin:-4px 0 16px;font-size:12px">
+                    这一套没有分段表，录音只能整段播放。
+                  </p>`
+           }`
+        : canSynth
+          ? `<div class="tts-bar">
+               <button class="btn btn-primary btn-sm" id="tts-all">▶ 从第 1 篇开始</button>
+               <button class="btn btn-sm" id="tts-pause" disabled>暂停</button>
+               <label class="rate">倍速
+                 <select id="tts-rate">
+                   <option value="0.8">0.8×</option>
+                   <option value="1" selected>1×</option>
+                   <option value="1.2">1.2×</option>
+                 </select>
+               </label>
+               <span class="pill" id="tts-state">未播放</span>
+             </div>
+             <div class="pieces">${chips}</div>
+             <p class="muted" style="margin:-8px 0 16px;font-size:12px">
+               这一套是原创示例卷，没有真人录音：点篇目用系统语音朗读该篇，读完自动停；也可以从第 1 篇连着听。
+               原文在交卷后才出现。
+             </p>`
+          : CET4.UI.note(
+              synthMode
+                ? '这个环境没有语音合成，听不了示例卷的听力。可以导入带真人录音的题库，或交卷后看原文。'
+                : '这一套没有对应录音，只能作答与对答案。',
+              'warn'
+            );
+
       CET4.UI.set(
         headHtml() +
           `<div class="wrap">
-            ${
-              audioSrc
-                ? `<div class="audio-bar">
-                     <audio id="ls-audio" controls preload="metadata" src="${esc(audioSrc)}"></audio>
-                     <div class="audio-side">
-                       <label class="rate">倍速
-                         <select id="ls-rate">
-                           <option value="0.75">0.75×</option>
-                           <option value="1" selected>1×</option>
-                           <option value="1.25">1.25×</option>
-                           <option value="1.5">1.5×</option>
-                         </select>
-                       </label>
-                       <span class="pill" id="ls-pos">00:00</span>
-                     </div>
-                   </div>
-                   ${
-                     pieces.length
-                       ? `<div class="pieces">${pieces
-                           .map((p) => {
-                             const no = Number(p.key.slice(1));
-                             const name = { A: '新闻', B: '对话', C: '短文' }[p.section] || '';
-                             return `<button class="piece" data-jump="${p.key}" data-start="${p.start}" data-end="${p.end}" title="${esc(
-                               `${p.title} · ${p.from}–${p.to} 题 · 从 ${fmt(p.start)} 开始，播完这一段自动停`
-                             )}">${name}${no}</button>`;
-                           })
-                           .join('')}</div>
-                         <p class="muted" style="margin:-8px 0 16px;font-size:12px">
-                           点篇目跳到对应录音，播完这一段自动停；也可以直接拖进度条听全程。
-                         </p>`
-                       : `<p class="muted" style="margin:-4px 0 16px;font-size:12px">
-                           这一套没有分段表，录音只能整段播放。
-                         </p>`
-                   }`
-                : CET4.UI.note('这一套没有对应录音，只能作答与对答案。', 'warn')
-            }
+            ${audioBlock}
             ${!ls.verified ? CET4.UI.note('这一套没有录音原文，录音按套号推定归属；如果听下来不对，可在设置里核对资料目录。', 'info') : ''}
             ${
               ls.copiedFrom
@@ -291,6 +334,11 @@
           clock.stop();
           const audio = document.getElementById('ls-audio');
           if (audio) audio.pause();
+          try {
+            window.speechSynthesis?.cancel();
+          } catch {
+            /* 忽略 */
+          }
           CET4.Store.save();
           L.start(paperId);
         };
@@ -358,6 +406,108 @@
         });
       } else {
         document.querySelectorAll('[data-jump]').forEach((b) => b.remove());
+        if (canSynth) setupTts();
+      }
+
+      /* 语音合成朗读（示例卷）：按句朗读，一篇读完就停；不打包任何音频文件 */
+      function setupTts() {
+        const synth = window.speechSynthesis;
+        const stateEl = document.getElementById('tts-state');
+        const pauseBtn = document.getElementById('tts-pause');
+        const rateSel = document.getElementById('tts-rate');
+        let token = 0;
+
+        const pickVoice = () => {
+          const voices = synth.getVoices() || [];
+          return voices.find((v) => /en[-_]US/i.test(v.lang)) || voices.find((v) => /^en/i.test(v.lang)) || null;
+        };
+
+        const say = (text) =>
+          new Promise((resolve, reject) => {
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US';
+            u.rate = Number(rateSel?.value || 1);
+            const v = pickVoice();
+            if (v) u.voice = v;
+            u.onend = resolve;
+            u.onerror = reject;
+            synth.speak(u);
+          });
+
+        const halt = () => {
+          token++;
+          try {
+            synth.cancel();
+          } catch {
+            /* 忽略 */
+          }
+          if (pauseBtn) {
+            pauseBtn.disabled = true;
+            pauseBtn.textContent = '暂停';
+          }
+        };
+
+        const play = async (fromKey) => {
+          const startIdx = fromKey ? ls.passages.findIndex((p) => p.key === fromKey) : 0;
+          if (startIdx < 0) return;
+          halt();
+          const my = ++token;
+          if (pauseBtn) pauseBtn.disabled = false;
+
+          for (let i = startIdx; i < ls.passages.length; i++) {
+            const p = ls.passages[i];
+            if (stateEl) stateEl.textContent = `朗读 ${p.title}`;
+            const target = document.getElementById(`ps-${p.key}`);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            for (const s of CET4.util.sentences(p.text || '')) {
+              if (my !== token) return;
+              try {
+                await say(s);
+              } catch {
+                if (my === token && stateEl) stateEl.textContent = '朗读被中断';
+                if (pauseBtn) pauseBtn.disabled = true;
+                return;
+              }
+            }
+            /* 点单篇：读完这篇就停；从第 1 篇开始：一路读下去 */
+            if (fromKey) break;
+          }
+          if (my === token && stateEl) stateEl.textContent = '读完了';
+          if (pauseBtn) pauseBtn.disabled = true;
+        };
+
+        document.querySelectorAll('[data-speak]').forEach((b) => {
+          b.onclick = () => {
+            document.querySelectorAll('.piece').forEach((x) => x.classList.remove('on'));
+            b.classList.add('on');
+            play(b.dataset.speak);
+          };
+        });
+
+        const all = document.getElementById('tts-all');
+        if (all) all.onclick = () => play(null);
+
+        if (pauseBtn)
+          pauseBtn.onclick = () => {
+            try {
+              if (synth.paused) {
+                synth.resume();
+                pauseBtn.textContent = '暂停';
+              } else {
+                synth.pause();
+                pauseBtn.textContent = '继续';
+              }
+            } catch {
+              /* 忽略 */
+            }
+          };
+
+        /* 有些环境要先触发一次 getVoices 才有声音列表 */
+        try {
+          synth.getVoices();
+        } catch {
+          /* 忽略 */
+        }
       }
 
       /* 原文展开 */
@@ -381,6 +531,11 @@
           } catch {
             /* 忽略 */
           }
+        }
+        try {
+          window.speechSynthesis?.cancel();
+        } catch {
+          /* 忽略 */
         }
       });
     },

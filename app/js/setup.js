@@ -217,10 +217,13 @@
     }
 
     const missing = !err || err.status === 404;
-    const title = missing ? '先把题库准备好' : '题库读不出来';
-    const lead = missing
-      ? '这个插件只带代码，题目不在包里。用你自己的资料生成一次，大约两分钟，之后就一直能用了。'
-      : '题库文件在，但读的时候出错了。多半是构建中途被打断，重新生成一次即可。';
+    const voluntary = !err; // 从首页/设置点进来：当前有示例可看，只是要换成自己的
+    const title = voluntary ? '换成我自己的真题' : missing ? '先把题库准备好' : '题库读不出来';
+    const lead = voluntary
+      ? '内置示例只有 426 个词和一套原创模拟卷。把自备的真题资料构建一次，示例会自动让位，数据只留在本机。'
+      : missing
+        ? '这个插件只带代码，题目不在包里。用你自己的资料生成一次，大约两分钟，之后就一直能用了。'
+        : '题库文件在，但读的时候出错了。多半是构建中途被打断，重新生成一次即可。';
 
     CET4.UI.set(`
       <div class="wrap setup">
@@ -287,9 +290,8 @@
         </div>
       </div>`);
 
-    CET4.UI.hideBack();
-
-    /* 命令跟着输入框走 */
+    if (voluntary) CET4.UI.backTo(() => CET4.App.home());
+    else CET4.UI.hideBack();
     const srcEl = document.getElementById('setup-src');
     const cmdEl = document.getElementById('setup-cmd');
     const buildCmd = (src) => `cd <插件目录>\nnpm run build:data -- --src "${src || 'D:/CET-4'}"`;

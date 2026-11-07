@@ -1,0 +1,5 @@
+{
+  "root": "",
+  "note": "内置示例题库没有音频文件：听力用操作系统语音合成朗读（见 papers/mock-01.json 的 listening.synth）。要听真人录音，请导入自己的题库。",
+  "tracks": {}
+}

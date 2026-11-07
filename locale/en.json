@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "CET-4 Workbench",
-    "description": "An unofficial CET-4 study panel: core and syllabus vocabulary drilled unit by unit, past-paper listening with per-set audio playback, random practice for banked cloze, paragraph matching and reading comprehension, part or full translation, essay writing, plus wordbook and mistake book. Everything is scored offline; answers are provided without explanations. Papers and audio are supplied by the user."
+    "description": "An unofficial CET-4 study panel: core and syllabus vocabulary drilled unit by unit, listening with per-set playback, random practice for banked cloze, paragraph matching and reading comprehension, part or full translation, essay writing, plus wordbook and mistake book. Ships with an original sample pack (426 self-written words and one mock paper, readable with system speech synthesis) so it works right after install; real papers and recordings can be imported by the user. Everything is scored offline; answers are provided without explanations."
   },
   "panel": "CET-4 Workbench"
 }

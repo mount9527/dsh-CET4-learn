@@ -26,12 +26,19 @@ const expect = (label, file) => {
   return read(file)
 }
 
+/* ── 索引（先读：内置示例题库的验收标准与真题题库不同） ── */
+const index = expect('索引', path.join(DATA, 'index.json'))
+const media = expect('音轨索引', path.join(DATA, 'media.json'))
+const isStarter = index?.kind === 'starter'
+
 /* ── 词表 ── */
 const v1500 = expect('核心词表', path.join(DATA, 'vocab-1500.json'))
-const vFull = expect('大纲词表', path.join(DATA, 'vocab-4500.json')) || expect('大纲词表', path.join(DATA, 'vocab-3600.json'))
+const vFull = isStarter
+  ? null
+  : expect('大纲词表', path.join(DATA, 'vocab-4500.json')) || expect('大纲词表', path.join(DATA, 'vocab-3600.json'))
 
 for (const [label, list, min] of [
-  ['核心 1500', v1500, 1400],
+  [isStarter ? '示例词表' : '核心 1500', v1500, isStarter ? 300 : 1400],
   ['大纲词表', vFull, 3000],
 ]) {
   if (!list) continue
@@ -44,9 +51,7 @@ for (const [label, list, min] of [
   if (dup) warn(`${label} 有 ${dup} 个重复词`)
 }
 
-/* ── 索引 ── */
-const index = expect('索引', path.join(DATA, 'index.json'))
-const media = expect('音轨索引', path.join(DATA, 'media.json'))
+/* ── 索引口径 ── */
 const papers = index?.papers || []
 if (papers.length < 1) fail('index.json 里没有卷宗')
 
@@ -186,8 +191,10 @@ if (errors.length) {
   for (const e of errors) console.log('  ✗ ' + e)
   process.exit(1)
 }
+const where =
+  DATA_INFO.source === 'plugin' ? '插件内 data/' : DATA_INFO.source === 'starter' ? '内置示例题库' : DATA
 console.log(
-  `\n题库体检通过（${DATA_INFO.source === 'plugin' ? '插件内 data/' : DATA}）：${papers.length} 套卷、${
-    v1500?.length ?? 0
-  } + ${vFull?.length ?? 0} 词、${seenAudio.size} 份录音。`
+  `\n题库体检通过（${where}）：${papers.length} 套卷、${v1500?.length ?? 0}${
+    vFull ? ` + ${vFull.length}` : ''
+  } 词、${seenAudio.size} 份录音${isStarter ? ' · 示例内容，无真人录音' : ''}。`
 )

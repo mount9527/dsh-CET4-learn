@@ -1,0 +1,677 @@
+{
+  "id": "mock-01",
+  "year": 2026,
+  "month": 12,
+  "set": 1,
+  "title": "示例模拟卷（原创）",
+  "period": "示例模拟卷",
+  "sourceFile": "本项目原创模拟题，非真题",
+  "listenFrom": null,
+  "synth": true,
+  "listening": {
+    "synth": true,
+    "track": "",
+    "audio": "",
+    "verified": true,
+    "passages": [
+      {
+        "key": "A1",
+        "section": "A",
+        "sectionLabel": "新闻",
+        "title": "News Report One",
+        "from": 1,
+        "to": 2,
+        "text": "The city library has decided to keep its main reading room open until midnight, starting next Monday. Staff say the change follows a survey in which more than six hundred students asked for longer hours during the exam season. The library will keep two floors open after ten in the evening, with free tea and hot water available near the entrance. To pay for the extra hours, the library will close one small branch on Sunday mornings. A librarian told our reporter that the number of visitors after nine in the evening had already doubled in the past year, and that the new timetable simply reflects how students actually study.",
+        "questions": [
+          {
+            "n": 1,
+            "stem": "What will the city library do starting next Monday?",
+            "options": {
+              "A": "Open a new branch near the university.",
+              "B": "Keep its main reading room open until midnight.",
+              "C": "Offer free meals to students at night.",
+              "D": "Close all branches during the exam season."
+            },
+            "answer": "B"
+          },
+          {
+            "n": 2,
+            "stem": "How will the library cover the cost of the extra hours?",
+            "options": {
+              "A": "By raising the price of tea.",
+              "B": "By asking students for donations.",
+              "C": "By closing one small branch on Sunday mornings.",
+              "D": "By reducing the number of new books."
+            },
+            "answer": "C"
+          }
+        ]
+      },
+      {
+        "key": "A2",
+        "section": "A",
+        "sectionLabel": "新闻",
+        "title": "News Report Two",
+        "from": 3,
+        "to": 4,
+        "text": "A middle school in the east of the city has started a one-month experiment: students may hand in their phones at the start of the day and get them back after the last class. The school says the idea came from the students themselves, not from the teachers. In the first two weeks, the number of students who said they felt sleepy in class fell by nearly a third. Not everyone is happy, however. Some parents complain that they cannot reach their children during the day. The school has promised to set up a phone line in the office for urgent calls, and it will decide in June whether to keep the rule.",
+        "questions": [
+          {
+            "n": 3,
+            "stem": "Who first suggested the phone experiment?",
+            "options": {
+              "A": "The teachers.",
+              "B": "The parents.",
+              "C": "The students.",
+              "D": "The local government."
+            },
+            "answer": "C"
+          },
+          {
+            "n": 4,
+            "stem": "What do some parents worry about?",
+            "options": {
+              "A": "Their children may lose their phones.",
+              "B": "They cannot reach their children during the day.",
+              "C": "The school may charge for storing phones.",
+              "D": "Their children may fall behind in class."
+            },
+            "answer": "B"
+          }
+        ]
+      },
+      {
+        "key": "A3",
+        "section": "A",
+        "sectionLabel": "新闻",
+        "title": "News Report Three",
+        "from": 5,
+        "to": 7,
+        "text": "Three years ago, this city began building protected bicycle lanes along its main roads. At the time, shop owners worried that losing parking spaces would hurt their business. The results, published this week, tell a different story. Bicycle use has risen by forty percent, and the number of accidents involving cyclists has fallen by half. Shops along the new lanes report that more customers now arrive on foot or by bike than before. The city plans to add another sixty kilometres of lanes next year, and it will also install more lights, since cyclists say dark corners are still the main danger at night.",
+        "questions": [
+          {
+            "n": 5,
+            "stem": "What did shop owners worry about three years ago?",
+            "options": {
+              "A": "Losing parking spaces would hurt business.",
+              "B": "The lanes would be too expensive to build.",
+              "C": "Cyclists would ride too fast.",
+              "D": "The city would close the main roads."
+            },
+            "answer": "A"
+          },
+          {
+            "n": 6,
+            "stem": "What has happened to bicycle use in the city?",
+            "options": {
+              "A": "It has stayed the same.",
+              "B": "It has risen by forty percent.",
+              "C": "It has fallen by half.",
+              "D": "It has doubled in three years."
+            },
+            "answer": "B"
+          },
+          {
+            "n": 7,
+            "stem": "What will the city do next year?",
+            "options": {
+              "A": "Remove some of the old lanes.",
+              "B": "Ban cars from the city centre.",
+              "C": "Add sixty kilometres of lanes and more lights.",
+              "D": "Build more parking spaces for shops."
+            },
+            "answer": "C"
+          }
+        ]
+      },
+      {
+        "key": "B1",
+        "section": "B",
+        "sectionLabel": "对话",
+        "title": "Conversation One",
+        "from": 8,
+        "to": 11,
+        "text": "W: Excuse me, I got an email saying two of my books are overdue. I thought I had renewed them online.\nM: Let me check. Ah, your renewal went through, but only for one of them. The other one, the history of tea, was requested by another reader, so it could not be renewed.\nW: I see. What should I do? I still need it for a paper I am writing.\nM: You can return it today and I will put you on the waiting list. It usually comes back within a week, since the other reader only needs it for a short loan.\nW: All right. And how much do I owe for the late days?\nM: Three days at fifty cents each, so one dollar fifty. But if you return it now, I can waive the fine. We are running a small campaign this month to encourage people to bring books back.\nW: That is very kind. I will bring it in this afternoon.",
+        "questions": [
+          {
+            "n": 8,
+            "stem": "Why could one of the books not be renewed?",
+            "options": {
+              "A": "It was already three days late.",
+              "B": "Another reader had requested it.",
+              "C": "The woman had lost her card.",
+              "D": "The library was closed for repairs."
+            },
+            "answer": "B"
+          },
+          {
+            "n": 9,
+            "stem": "What does the man suggest the woman do?",
+            "options": {
+              "A": "Buy her own copy of the book.",
+              "B": "Return it today and join the waiting list.",
+              "C": "Ask the other reader for permission.",
+              "D": "Write her paper with other sources."
+            },
+            "answer": "B"
+          },
+          {
+            "n": 10,
+            "stem": "How much is the fine at first?",
+            "options": {
+              "A": "Fifty cents.",
+              "B": "One dollar.",
+              "C": "One dollar fifty.",
+              "D": "Three dollars."
+            },
+            "answer": "C"
+          },
+          {
+            "n": 11,
+            "stem": "Why does the man say he can waive the fine?",
+            "options": {
+              "A": "The woman is a student.",
+              "B": "The book came back in good condition.",
+              "C": "There is a campaign to encourage returns.",
+              "D": "The computer system made a mistake."
+            },
+            "answer": "C"
+          }
+        ]
+      },
+      {
+        "key": "B2",
+        "section": "B",
+        "sectionLabel": "对话",
+        "title": "Conversation Two",
+        "from": 12,
+        "to": 15,
+        "text": "M: Come in, please. So you are applying for the summer internship at our design studio.\nW: Yes. I am in my third year of industrial design, and I have done two small projects for a furniture company.\nM: Good. The internship is eight weeks, and honestly, it is not glamorous. You would be helping with models, photos, and a lot of measuring. Are you comfortable with that?\nW: Very. I would rather learn how a studio really works than sit in meetings.\nM: That is the right answer. One more thing: we work four long days instead of five short ones in summer. Is that a problem for you?\nW: No. I actually prefer that, because it leaves Friday free for my own drawing.\nM: Then I think we can offer you a place. We will send the details by email on Monday.",
+        "questions": [
+          {
+            "n": 12,
+            "stem": "What is the woman applying for?",
+            "options": {
+              "A": "A part-time job in a furniture shop.",
+              "B": "A summer internship at a design studio.",
+              "C": "A place in a drawing competition.",
+              "D": "A course in industrial design."
+            },
+            "answer": "B"
+          },
+          {
+            "n": 13,
+            "stem": "What would the woman mainly do during the internship?",
+            "options": {
+              "A": "Help with models, photos and measuring.",
+              "B": "Manage the studio's social media.",
+              "C": "Design a complete product line.",
+              "D": "Attend meetings with clients."
+            },
+            "answer": "A"
+          },
+          {
+            "n": 14,
+            "stem": "How does the studio organise its summer week?",
+            "options": {
+              "A": "Five short days.",
+              "B": "Three long days.",
+              "C": "Four long days.",
+              "D": "Six half days."
+            },
+            "answer": "C"
+          },
+          {
+            "n": 15,
+            "stem": "Why does the woman prefer that arrangement?",
+            "options": {
+              "A": "She lives far from the studio.",
+              "B": "It leaves Friday free for her own drawing.",
+              "C": "She has another job on weekdays.",
+              "D": "She wants to study in the mornings."
+            },
+            "answer": "B"
+          }
+        ]
+      },
+      {
+        "key": "C1",
+        "section": "C",
+        "sectionLabel": "短文",
+        "title": "Passage One",
+        "from": 16,
+        "to": 18,
+        "text": "Most students believe that staying up late is the price of good marks. Research on memory suggests the opposite. During sleep, the brain replays what you learned during the day, and it moves facts from short-term storage into longer-term storage. Cut that process short and the facts are still there in the morning, but they fade much faster over the following days. In one experiment, students who studied a list of words and then slept for eight hours remembered far more a week later than students who studied the same list at the same time but slept only four hours. The lesson is simple: an hour of study followed by enough sleep beats three hours of study followed by none.",
+        "questions": [
+          {
+            "n": 16,
+            "stem": "What does research on memory suggest?",
+            "options": {
+              "A": "Late-night study always improves marks.",
+              "B": "Sleep helps move facts into longer-term storage.",
+              "C": "Students need less sleep than others.",
+              "D": "Short-term memory is more important than long-term memory."
+            },
+            "answer": "B"
+          },
+          {
+            "n": 17,
+            "stem": "What happened to students who slept only four hours?",
+            "options": {
+              "A": "They forgot the words immediately.",
+              "B": "They remembered more than the others.",
+              "C": "They remembered much less a week later.",
+              "D": "They could not fall asleep at all."
+            },
+            "answer": "C"
+          },
+          {
+            "n": 18,
+            "stem": "What is the speaker's advice?",
+            "options": {
+              "A": "Study for as many hours as possible.",
+              "B": "Study for an hour and then get enough sleep.",
+              "C": "Review words only in the morning.",
+              "D": "Sleep four hours before an exam."
+            },
+            "answer": "B"
+          }
+        ]
+      },
+      {
+        "key": "C2",
+        "section": "C",
+        "sectionLabel": "短文",
+        "title": "Passage Two",
+        "from": 19,
+        "to": 21,
+        "text": "When people talk about city gardens, they usually imagine a park. But some of the most useful gardens in modern cities are on the roofs of buildings. A roof garden cools the building below it, because plants absorb heat that would otherwise be stored in the concrete. It also holds rain water for a while, which reduces the pressure on drains during a storm. In one office building, a roof garden cut the cost of air conditioning by about fifteen percent in summer. There are limits, of course: the roof must be strong enough, and someone must water the plants in dry weeks. Still, for cities short of open space, the sky is a practical place to grow.",
+        "questions": [
+          {
+            "n": 19,
+            "stem": "Why does a roof garden cool the building below it?",
+            "options": {
+              "A": "It reflects sunlight back into the sky.",
+              "B": "Plants absorb heat that would be stored in concrete.",
+              "C": "It makes the building taller.",
+              "D": "It blocks the wind from the street."
+            },
+            "answer": "B"
+          },
+          {
+            "n": 20,
+            "stem": "What happened in one office building with a roof garden?",
+            "options": {
+              "A": "Air conditioning cost fell by about fifteen percent.",
+              "B": "The roof had to be rebuilt.",
+              "C": "Staff worked fewer hours in summer.",
+              "D": "Rain water flooded the top floor."
+            },
+            "answer": "A"
+          },
+          {
+            "n": 21,
+            "stem": "What limit of roof gardens does the speaker mention?",
+            "options": {
+              "A": "They cannot grow flowers.",
+              "B": "They attract too many birds.",
+              "C": "The roof must be strong enough and the plants watered.",
+              "D": "They are illegal in most cities."
+            },
+            "answer": "C"
+          }
+        ]
+      },
+      {
+        "key": "C3",
+        "section": "C",
+        "sectionLabel": "短文",
+        "title": "Passage Three",
+        "from": 22,
+        "to": 25,
+        "text": "Laptops have replaced paper in most lecture halls, and many students type faster than they write. Yet several studies find that students who take notes by hand understand ideas better than those who type. The reason is not speed but choice. A fast typist can copy a lecture almost word for word, and copying does not require thinking about meaning. Writing by hand is slower, so the writer must decide what matters, compress it, and put it in their own words. That act of selection is where learning happens. This does not mean laptops are bad; it means that if you type, you should close the slides, listen for the main idea, and write your notes as if you had to explain them to a friend.",
+        "questions": [
+          {
+            "n": 22,
+            "stem": "What do several studies find about note-taking?",
+            "options": {
+              "A": "Typing is always better than writing.",
+              "B": "Students who write by hand understand ideas better.",
+              "C": "Students no longer take notes at all.",
+              "D": "Speed is the most important factor."
+            },
+            "answer": "B"
+          },
+          {
+            "n": 23,
+            "stem": "Why does writing by hand help learning?",
+            "options": {
+              "A": "It is faster than typing.",
+              "B": "It forces the writer to select and reword ideas.",
+              "C": "It keeps the hand strong.",
+              "D": "It produces neater pages."
+            },
+            "answer": "B"
+          },
+          {
+            "n": 24,
+            "stem": "What problem does the speaker see with fast typing?",
+            "options": {
+              "A": "It damages the laptop keyboard.",
+              "B": "It copies words without thinking about meaning.",
+              "C": "It uses too much electricity.",
+              "D": "It disturbs other students."
+            },
+            "answer": "B"
+          },
+          {
+            "n": 25,
+            "stem": "What should students do if they type their notes?",
+            "options": {
+              "A": "Type as quickly as possible.",
+              "B": "Record the lecture and type it later.",
+              "C": "Close the slides and write as if explaining to a friend.",
+              "D": "Stop using laptops in class."
+            },
+            "answer": "C"
+          }
+        ]
+      }
+    ]
+  },
+  "cloze": {
+    "passage": "Walking is the oldest form of transport, and in many cities it is also the most {{26}} one. A healthy adult can walk about five kilometres in an hour, which is enough to cross a small town centre. Yet for fifty years, city planners treated walking as a leftover activity, something people did only when they could not find a bus. The {{27}} has been a sharp rise in short car trips: nearly a third of all car journeys in the city are under two kilometres. Several towns have begun to {{28}} this trend by widening pavements, planting trees for shade, and lowering the speed of traffic in the centre. The results are {{29}} clear. Where pavements are wide and clean, more people walk, shops do better, and the air is cleaner. Walking also costs almost nothing, which makes it {{30}} for students and older people. Of course, weather {{31}} the picture. In rainy months, covered streets and bus shelters matter as much as pavements. But the main {{32}} is simple: a city that is pleasant to walk in is a city where people want to {{33}}. The change is slow, and {{34}} the benefits are easy to see. On any street where the trees have grown, shops have {{35}} more customers who arrive on foot.",
+    "bank": [
+      { "letter": "A", "word": "approach" },
+      { "letter": "B", "word": "beneficial" },
+      { "letter": "C", "word": "consequence" },
+      { "letter": "D", "word": "equally" },
+      { "letter": "E", "word": "especially" },
+      { "letter": "F", "word": "explore" },
+      { "letter": "G", "word": "gained" },
+      { "letter": "H", "word": "inexpensive" },
+      { "letter": "I", "word": "influence" },
+      { "letter": "J", "word": "reason" },
+      { "letter": "K", "word": "reverse" },
+      { "letter": "L", "word": "recognise" },
+      { "letter": "M", "word": "settle" },
+      { "letter": "N", "word": "surprisingly" },
+      { "letter": "O", "word": "valuable" }
+    ]
+  },
+  "matching": {
+    "title": "How Libraries Are Becoming Living Rooms",
+    "paragraphs": [
+      {
+        "label": "A",
+        "text": "Twenty years ago, a library was judged by the size of its collection. Today, many librarians say the collection is the least interesting thing about the building. As books move online and reference questions are answered by a search engine, the reason to walk through the door has changed."
+      },
+      {
+        "label": "B",
+        "text": "The change is easiest to see in the reading room. Long tables built for silence now share space with small sofas, a play corner for children, and a machine that makes coffee. Some older readers complain about the noise. Librarians answer that a library which is quiet but empty serves nobody."
+      },
+      {
+        "label": "C",
+        "text": "In one town, the library opens its meeting room to local clubs at no charge. A chess club meets on Tuesday, a group of retired teachers on Thursday. The library reports that visitors spend more time in the building, and that borrowing has risen slightly rather than fallen, as some staff had feared."
+      },
+      {
+        "label": "D",
+        "text": "Staff roles have changed too. A librarian in a small city now spends part of the week helping people fill in online forms for government services. This is not what she trained for, she says, but it is what the public asks for, and it keeps the building busy."
+      },
+      {
+        "label": "E",
+        "text": "Not everyone welcomes the new model. Critics argue that libraries are quietly becoming social centres with a few books in the corner, and that the money would be better spent on longer opening hours and more staff. They point out that a coffee machine cannot replace a trained librarian."
+      },
+      {
+        "label": "F",
+        "text": "The financial picture is mixed. Cities that have invested in the new model report higher visitor numbers and stronger public support when budgets are discussed. In smaller towns, however, the same changes have been slower, because a single librarian cannot run a reading room, a club programme and a repair service at once."
+      },
+      {
+        "label": "G",
+        "text": "Technology has made part of the change possible. Self-service machines handle borrowing and returns, releasing staff from the desk. Some libraries now lend tools, musical instruments and even cake tins, which requires a different kind of record keeping but attracts people who never borrowed a book."
+      },
+      {
+        "label": "H",
+        "text": "Perhaps the most important effect is on people who were never readers. A man who came in to use a computer for a job application now attends a weekly English class in the same building. He says the library is the only place in town where he can sit for two hours without being asked to buy something."
+      },
+      {
+        "label": "I",
+        "text": "Architects have responded with designs that can change. Movable shelves and light furniture allow a single room to serve as a quiet study area in the morning and a lecture hall in the evening. The building no longer tells people what to do in it."
+      },
+      {
+        "label": "J",
+        "text": "Children's areas have grown fastest of all. Story hours, homework clubs and holiday programmes bring in parents who then borrow books for themselves. Librarians describe this as the most reliable way to build a habit of reading: catch the family, not only the child."
+      },
+      {
+        "label": "K",
+        "text": "There are practical limits. A building designed in 1930 may have no space for a lift, and adding one can cost more than a new wing. Older libraries often cannot provide the sockets, the lighting and the wide doorways that a modern programme needs."
+      },
+      {
+        "label": "L",
+        "text": "What has not changed is the promise of neutrality. A library is still the one indoor place where a person may stay without paying, without explaining why, and without being moved on. Librarians guard this rule carefully, because it is the reason many visitors first come in."
+      },
+      {
+        "label": "M",
+        "text": "Looking ahead, most librarians expect the collection to keep shrinking in physical size while growing in range online. The building, they say, will matter more, not less, because it is the only public space where people of different ages and incomes meet by accident."
+      }
+    ],
+    "statements": [
+      {
+        "n": 36,
+        "text": "Some libraries let people borrow objects that are not books at all.",
+        "answer": "G"
+      },
+      {
+        "n": 37,
+        "text": "One librarian now helps visitors with official forms rather than only with books.",
+        "answer": "D"
+      },
+      {
+        "n": 38,
+        "text": "A library can be used without buying anything, which matters to some visitors.",
+        "answer": "H"
+      },
+      {
+        "n": 39,
+        "text": "Furniture and shelves are now designed so that one room can serve different purposes.",
+        "answer": "I"
+      },
+      {
+        "n": 40,
+        "text": "Some people think libraries are turning into social centres with too few books.",
+        "answer": "E"
+      },
+      {
+        "n": 41,
+        "text": "Offering space to local clubs did not reduce the number of books borrowed.",
+        "answer": "C"
+      },
+      {
+        "n": 42,
+        "text": "Small towns have found the new model harder to carry out.",
+        "answer": "F"
+      },
+      {
+        "n": 43,
+        "text": "Bringing in parents is seen as a dependable way of building reading habits.",
+        "answer": "J"
+      },
+      {
+        "n": 44,
+        "text": "Old buildings may make a modern programme difficult to deliver.",
+        "answer": "K"
+      },
+      {
+        "n": 45,
+        "text": "The building is expected to become more important, not less, in the future.",
+        "answer": "M"
+      }
+    ]
+  },
+  "reading": [
+    {
+      "title": "Passage One",
+      "paragraphs": [
+        "For years the travel industry sold speed. A weekend in three cities, a flight every morning, a photograph at every famous wall: the point was to cover as much ground as possible. Then a quiet counter-movement appeared, and its supporters gave it a plain name: slow travel.",
+        "Slow travel does not mean travelling without a plan. It means choosing fewer places and staying longer in each. A family that once visited six towns in a week now rents a flat in one for the same seven days. They shop at the same market twice, learn the name of the woman who sells bread, and walk the same street at different hours. Nothing dramatic happens. That, its defenders say, is the point.",
+        "The idea has practical roots. Cheap flights made short trips easy, but they also made travel exhausting: airports, queues, and the constant work of finding the next place to sleep. Travellers who calculate the hours spent moving rather than the number of places seen often find that a slower plan gives them more usable time, even if the map looks emptier.",
+        "There is an environmental argument as well. Staying in one region usually means fewer flights and more trains, and a train journey produces a small fraction of the emissions of the same trip by air. Local spending also tends to stay local: a guest who stays a week buys bread, vegetables and bus tickets in the same town, while a guest who stays a night buys a postcard.",
+        "The movement has its critics. Small businesses in popular places say that visitors who stay longer expect more comfort, and that a flat rented for a week does more damage to the housing market than a hotel bed. Others note that slow travel is a luxury of people with flexible jobs; a worker with ten days of leave a year cannot easily spend six of them in one village.",
+        "Still, the shift has changed what some travellers want from a trip. In a survey of young visitors to a southern province, more than half said they would rather return to a place they liked than see a new one. That answer would have puzzled a tour operator in 2005. It makes sense to anyone who has spent a holiday running between stations."
+      ],
+      "questions": [
+        {
+          "n": 46,
+          "stem": "What was the travel industry mainly selling in the past?",
+          "options": {
+            "A": "Comfort in a single place.",
+            "B": "Speed and the number of places seen.",
+            "C": "Low prices for long stays.",
+            "D": "Quiet towns away from crowds."
+          },
+          "answer": "B"
+        },
+        {
+          "n": 47,
+          "stem": "What does slow travel involve according to the passage?",
+          "options": {
+            "A": "Choosing fewer places and staying longer.",
+            "B": "Travelling without any plan at all.",
+            "C": "Avoiding markets and local shops.",
+            "D": "Moving every day but more slowly."
+          },
+          "answer": "A"
+        },
+        {
+          "n": 48,
+          "stem": "Why do some travellers find a slower plan gives them more usable time?",
+          "options": {
+            "A": "They spend fewer hours moving between places.",
+            "B": "They sleep less during the trip.",
+            "C": "They visit more famous walls.",
+            "D": "They travel only at night."
+          },
+          "answer": "A"
+        },
+        {
+          "n": 49,
+          "stem": "What environmental point is made about slow travel?",
+          "options": {
+            "A": "Trains are always more expensive than planes.",
+            "B": "Staying in one region means fewer flights.",
+            "C": "Local food produces more emissions.",
+            "D": "Hotels use less energy than flats."
+          },
+          "answer": "B"
+        },
+        {
+          "n": 50,
+          "stem": "What do critics say about slow travel?",
+          "options": {
+            "A": "It is only possible in southern provinces.",
+            "B": "It makes local bread more expensive.",
+            "C": "It is a luxury for people with flexible jobs.",
+            "D": "It reduces the number of trains."
+          },
+          "answer": "C"
+        }
+      ]
+    },
+    {
+      "title": "Passage Two",
+      "paragraphs": [
+        "In 2017 a bicycle-sharing company placed a thousand bright yellow bikes on the streets of a Chinese city and told users to leave them anywhere. Within two years the same streets held broken frames, bent wheels and piles of bikes outside stations. Then, quietly, the industry changed direction: the bikes were locked to fixed stands, users had to return them to a marked point, and the number of bikes in each area was decided by the city rather than by the company.",
+        "The first model failed for a reason that had little to do with bicycles. Free parking meant that the cost of disorder was paid by everyone except the company that caused it: pavements blocked, blind users unable to pass, maintenance workers clearing metal from rivers. When the city made the companies responsible for the mess, the economics changed. A bike that must be returned to a stand is harder to lose, cheaper to repair, and easier to move to where it is needed.",
+        "The second model has produced numbers that surprise even its supporters. In one district, sixty percent of bike trips now replace a car or bus journey rather than a walk, which means the bikes are not simply taking pedestrians off the pavement. Trips are also short: the average ride is about eleven minutes, and the most common purpose is getting to a metro station.",
+        "Problems remain. Bikes cluster where people live and vanish where they work, so a company must move them every morning. Batteries for electric bikes create a new waste stream. And in winter, use falls sharply in northern cities, leaving companies with the cost of a fleet that nobody rides.",
+        "Yet the comparison with the first boom is instructive. The yellow bikes proved that people will cycle if a bike is available within a minute's walk. The fixed stands proved that they will keep cycling if the system is predictable. Neither technology nor enthusiasm was the deciding factor; the rules were."
+      ],
+      "questions": [
+        {
+          "n": 51,
+          "stem": "What happened to the first free-parking bike system?",
+          "options": {
+            "A": "It spread to more cities quickly.",
+            "B": "The streets filled with broken and abandoned bikes.",
+            "C": "Users returned every bike to a stand.",
+            "D": "The city bought all the bikes."
+          },
+          "answer": "B"
+        },
+        {
+          "n": 52,
+          "stem": "Why did the first model fail according to the passage?",
+          "options": {
+            "A": "The bikes were too expensive to make.",
+            "B": "The cost of disorder was paid by everyone except the company.",
+            "C": "People did not know how to ride them.",
+            "D": "The city banned bicycles completely."
+          },
+          "answer": "B"
+        },
+        {
+          "n": 53,
+          "stem": "What does the second model require users to do?",
+          "options": {
+            "A": "Return bikes to a marked stand.",
+            "B": "Pay a monthly membership fee.",
+            "C": "Report every ride to the city.",
+            "D": "Use the bikes only in winter."
+          },
+          "answer": "A"
+        },
+        {
+          "n": 54,
+          "stem": "What do the figures in the third paragraph show?",
+          "options": {
+            "A": "Most bike trips replace walking.",
+            "B": "The average ride lasts about eleven minutes.",
+            "C": "Electric bikes are the most popular.",
+            "D": "Cycling has replaced the metro."
+          },
+          "answer": "B"
+        },
+        {
+          "n": 55,
+          "stem": "What is the main conclusion of the passage?",
+          "options": {
+            "A": "Technology decides whether a system works.",
+            "B": "Enthusiasm is enough to keep a system running.",
+            "C": "Clear rules, not technology or enthusiasm, made the system work.",
+            "D": "Bicycle sharing cannot work in northern cities."
+          },
+          "answer": "C"
+        }
+      ]
+    }
+  ],
+  "translation": {
+    "cn": "中国的许多城市都有早市。天刚亮，卖菜的人就在街边摆好摊子，附近居民提着袋子前来买菜。早市上的蔬菜通常比超市便宜，也更新鲜，摊主常常和顾客聊上几句，问问家里的老人和孩子。近年来，一些城市对早市进行了改造：增加了遮雨棚和垃圾桶，划出了专门的摊位，还要求摊主在收市后把地面打扫干净。改造之后，早市依然热闹，但街道比以前整洁了许多。对很多居民来说，逛早市不仅是为了买菜，也是一种开始一天的方式。"
+  },
+  "writing": {
+    "prompt": "Suppose your university is collecting students' opinions on how to make the campus more friendly to first-year students. You are to write an essay on one or two practical measures the university should take, and explain why they would help. You should write at least 120 words but no more than 180 words."
+  },
+  "answers": {
+    "listening": {
+      "1": "B", "2": "C", "3": "C", "4": "B", "5": "A", "6": "B", "7": "C",
+      "8": "B", "9": "B", "10": "C", "11": "C", "12": "B", "13": "A", "14": "C", "15": "B",
+      "16": "B", "17": "C", "18": "B", "19": "B", "20": "A", "21": "C", "22": "B", "23": "B", "24": "B", "25": "C"
+    },
+    "cloze": {
+      "26": "O", "27": "C", "28": "K", "29": "N", "30": "H",
+      "31": "I", "32": "J", "33": "M", "34": "D", "35": "G"
+    },
+    "clozeWords": {
+      "26": "valuable", "27": "consequence", "28": "reverse", "29": "surprisingly", "30": "inexpensive",
+      "31": "influence", "32": "reason", "33": "settle", "34": "equally", "35": "gained"
+    },
+    "matching": {
+      "36": "G", "37": "D", "38": "H", "39": "I", "40": "E",
+      "41": "C", "42": "F", "43": "J", "44": "K", "45": "M"
+    },
+    "reading": {
+      "46": "B", "47": "A", "48": "A", "49": "B", "50": "C",
+      "51": "B", "52": "B", "53": "A", "54": "B", "55": "C"
+    }
+  }
+}

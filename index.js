@@ -20,7 +20,7 @@ import fs from 'node:fs'
 import fsp from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { resolveDataDir } from './lib/data-dir.js'
+import { resolveDataDir, userDataDir } from './lib/data-dir.js'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const PREFIX = '/cet4'
@@ -305,6 +305,11 @@ export function apply(ctx) {
   if (source === 'missing') {
     ctx.logger?.warn?.(
       `[dsh-cet4] 还没找到题库：${dir} —— 在自己的资料目录上跑 \`npm run build:data\` 生成（可用 CET4_DATA 指定位置）`,
+    )
+  } else if (source === 'starter') {
+    ctx.logger?.info?.(
+      `[dsh-cet4] 正在使用内置示例题库（原创模拟卷 + 开放词表，不含真题）：${dir}\n` +
+        `[dsh-cet4] 换成自己的真题：把题库构建到 ${userDataDir()} 后重启即可，示例会自动让位`,
     )
   } else {
     ctx.logger?.info?.(`[dsh-cet4] 题库目录：${dir}`)

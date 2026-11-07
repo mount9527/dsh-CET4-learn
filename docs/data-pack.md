@@ -3,6 +3,9 @@
 > 这份文档只描述**目录与文件约定**，不包含任何题目、录音或词表内容。
 > 真实的题库请放在**私有仓库**或本机资料目录里；公开仓库只放代码与本文档。
 
+> **先分清两种数据**：随包分发的 `starter/` 是**原创示例题库**（不碰真题，可公开分发，见 `NOTICE.md` 第 3 节），
+> 它不是本文说的「数据包」；本文讲的是使用者自备真题的目录约定。两者结构相同，所以同一套构建产物格式通吃。
+
 ## 1. 为什么数据不进公开仓库
 
 CET-4 的试题、听力录音、答案与词汇释义的著作权归原权利人（考试主办机构、出版方）。
@@ -109,8 +112,36 @@ npm run build:data -- --src ~/.dsh/dsh-cet4/data-pack
 ## 6. 校验
 
 ```bash
-npm run check:data
+npm run check:data      # 真题题库
+npm run check:starter   # 内置示例题库（无音频、kind=starter、词数自洽）
 ```
 
-会检查：答案数量、选词字母是否在词库、长篇阅读答案是否指向存在的段落、选项数、
+`check:data` 会检查：答案数量、选词字母是否在词库、长篇阅读答案是否指向存在的段落、选项数、
 选项是否粘连了下一段说明、听力题数/音轨是否存在、`index.json` 的录音统计是否与卷宗一致。
+
+`check:starter` 是发版护栏，拦这四类事故：音频混进 `starter/`、`index.json` 忘了标 `kind: "starter"`、
+卷宗里写了 `listening.audio`、`index.json` 声明的词数与词表实际条数不一致。
+
+## 7. 示例卷的字段约定（想自己加原创卷时）
+
+`starter/papers/*.json` 与真题卷结构相同，只有一处差别：**听力不指向音频文件**。
+
+```json
+{
+  "synth": true,
+  "listening": {
+    "synth": true,
+    "track": "",
+    "audio": "",
+    "verified": true,
+    "passages": [{ "key": "A1", "section": "A", "from": 1, "to": 2, "text": "…", "questions": [] }]
+  }
+}
+```
+
+- `listening.synth: true` 时前端不渲染 `<audio>`，改用 `SpeechSynthesis` 逐句朗读 `passages[].text`，
+  按篇点击单读、读完即停；交卷前不显示原文按钮（原文就是朗读内容，先给等于给答案）。
+- 没有 `start` / `end` 时间轴也能用；有真人录音时删掉 `synth`、填上 `audio` 与 `track` 即可走常规播放路径。
+- `index.json` 里对应记 `"synth": true` 与 `audio.synth` 计数，首页与听力菜单会据此显示「语音合成」。
+
+新增第二套原创卷时，`build/check-starter.mjs` 会自动把它纳入检查（无音频、有原文、答案齐全）。

@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-11-07T00:00:00.000Z",
+  "source": "dsh-cet4 内置示例题库（原创模拟卷 + 自编开放词表）",
+  "kind": "starter",
+  "notice": "此目录随插件分发，内容全部为原创或可公开分发的材料，不含任何真题、真题录音与真题答案。听力由操作系统语音合成实时朗读，包内没有音频文件。",
+  "vocab": {
+    "1500": {
+      "total": 426,
+      "unitSize": 100,
+      "units": 5,
+      "label": "示例核心词"
+    }
+  },
+  "audio": {
+    "files": 0,
+    "sets": 1,
+    "borrowed": 0,
+    "assumed": 0,
+    "transcribed": 1,
+    "synth": 1
+  },
+  "papers": [
+    {
+      "id": "mock-01",
+      "title": "示例模拟卷（原创）",
+      "period": "示例模拟卷",
+      "year": 2026,
+      "month": 12,
+      "set": 1,
+      "synth": true,
+      "hasListening": true,
+      "hasAudio": true,
+      "audioVerified": true,
+      "audioCopiedFrom": "",
+      "hasTranscript": true,
+      "hasCloze": true,
+      "hasMatching": true,
+      "hasReading": true,
+      "hasTranslation": true,
+      "hasWriting": true,
+      "listeningQuestions": 25,
+      "matchingStatements": 10,
+      "matchingParagraphs": 13
+    }
+  ]
+}

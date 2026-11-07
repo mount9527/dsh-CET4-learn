@@ -365,6 +365,32 @@ textarea.text { min-height: 200px; line-height: 1.8; font-size: 14.5px; }
 .word-bar > i.high { background: var(--bad); }
 
 /* ── 听力播放器 ── */
+/* ── 内置示例内容：徽标 + 提示条 + 语音合成播放条 ── */
+.starter-tip {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: var(--warn-soft); border: 1px solid var(--line); border-radius: 12px;
+  padding: 10px 14px; margin-bottom: 16px; font-size: 13px; line-height: 1.7; color: var(--ink-2);
+}
+.starter-tip b { color: var(--ink); }
+.starter-tip .btn { margin-left: auto; }
+.starter-badge {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 8px;
+  border-radius: 999px; background: var(--warn); color: #fff;
+  font-size: 11.5px; font-weight: 650; letter-spacing: .02em; white-space: nowrap;
+}
+.tts-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 10px 14px; margin-bottom: 10px; box-shadow: var(--shadow);
+}
+.tts-bar .rate {
+  font-size: 12.5px; color: var(--ink-3); display: flex; align-items: center; gap: 6px; margin-left: auto;
+}
+.tts-bar select {
+  font: inherit; font-size: 12.5px; color: var(--ink); background: var(--card);
+  border: 1px solid var(--line); border-radius: 8px; padding: 3px 6px;
+}
+
 .audio-bar {
   display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
   background: var(--card); border: 1px solid var(--line); border-radius: 12px;
@@ -377,8 +403,7 @@ textarea.text { min-height: 200px; line-height: 1.8; font-size: 14.5px; }
   font: inherit; font-size: 12.5px; color: var(--ink); background: var(--card);
   border: 1px solid var(--line); border-radius: 8px; padding: 3px 6px;
 }
-.pieces { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-.piece {
+.pieces { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }.piece {
   font: inherit; font-size: 13px; padding: 7px 14px; border-radius: 999px; cursor: pointer;
   min-height: 34px; line-height: 1.2;
   border: 1px solid var(--line); background: var(--card); color: var(--ink-2);
@@ -523,4 +548,7 @@ kbd {
   .hero-stats { gap: 8px 14px; }
   .grid { grid-template-columns: 1fr; }
   .quizbar { gap: 8px; padding: 8px 10px; }
+  .starter-tip { flex-direction: column; align-items: flex-start; }
+  .starter-tip .btn { margin-left: 0; }
+  .tts-bar .rate { margin-left: 0; }
 }

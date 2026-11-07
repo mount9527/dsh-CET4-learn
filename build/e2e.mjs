@@ -140,8 +140,11 @@ const IDX = await page.evaluate(() =>
   fetch(new URL('../data/index.json', location.href), { cache: 'no-store' }).then((r) => r.json())
 )
 const V15 = IDX.vocab['1500']
-const FULL_SIZE = Number(Object.keys(IDX.vocab).find((k) => k !== '1500'))
-const V45 = IDX.vocab[FULL_SIZE]
+/** 第二套词表是可选的：内置示例题库只有一套，跑 e2e 时也要能过 */
+const FULL_KEY = Object.keys(IDX.vocab).find((k) => k !== '1500')
+const FULL_SIZE = FULL_KEY ? Number(FULL_KEY) : null
+const V45 = FULL_KEY ? IDX.vocab[FULL_KEY] : null
+const IS_STARTER = IDX.kind === 'starter'
 const AUDIO = IDX.audio || {}
 const AUDIO_SETS = AUDIO.sets ?? IDX.papers.filter((p) => p.hasAudio).length
 const AUDIO_FILES = AUDIO.files ?? AUDIO_SETS
@@ -157,40 +160,43 @@ const SAMPLE_PAPER = await page.evaluate((id) => CET4.Data.paper(id), SAMPLE.id)
 const LS_PASSAGES = SAMPLE_PAPER.listening.passages.length
 
 /* ── 1. 首页 ── */
-await check('首页：9 个模块入口', async () => {
+await check(`首页：${V45 ? 9 : 8} 个模块入口`, async () => {
   const n = await page.$$eval('.card[data-go]', (els) => els.length)
-  assert(n === 9, `实际 ${n}`)
+  const want = V45 ? 9 : 8
+  assert(n === want, `实际 ${n}（应 ${want}）`)
   return `${n} 个`
 })
 
-await check(`首页：词数分母是 ${FULL_SIZE}（不是两表相加）`, async () => {
+await check(`首页：词数分母是 ${(V45 || V15).total}（不是两表相加）`, async () => {
   const t = await $text('.hero-stats')
-  assert(t.includes(String(V45.total)), `没看到 ${V45.total}：${t.replace(/\n/g, ' | ')}`)
-  assert(!t.includes(String(V15.total + V45.total)), '还在把两套词表相加')
+  assert(t.includes(String((V45 || V15).total)), `没看到 ${(V45 || V15).total}：${t.replace(/\n/g, ' | ')}`)
+  if (V45) assert(!t.includes(String(V15.total + V45.total)), '还在把两套词表相加')
   return t.replace(/\n/g, ' | ').slice(0, 90)
 })
 
-await check('首页：带免责说明（只带代码、不带真题）', async () => {
+await check('首页：带免责说明（只带代码 / 示例内容，不带真题）', async () => {
   const t = await $text('.wrap')
-  assert(/不附带任何真题内容/.test(t), '首页没有免责说明')
-  assert(/版权归原权利人/.test(t), '没提版权归属')
-  return '已展示'
+  assert(/不附带任何真题内容|不含任何真题/.test(t), '首页没有免责说明')
+  assert(/版权|权利/.test(t), '没提版权归属')
+  return IS_STARTER ? '示例模式说明' : '作者题库说明'
 })
 
 await shot('home-light')
 await check('首页：听力卡片区分「套」与「录音份数」', async () => {
   const t = await page.$eval('.card[data-go="listening"] .card-meta', (el) => el.innerText)
   assert(new RegExp(`${AUDIO_SETS} 套可听`).test(t), `没写可听套数（应 ${AUDIO_SETS}）：${t.replace(/\n/g, ' ')}`)
-  assert(new RegExp(`${AUDIO_FILES} 份录音`).test(t), `没写录音份数（应 ${AUDIO_FILES}）：${t.replace(/\n/g, ' ')}`)
+  if (AUDIO_FILES) assert(new RegExp(`${AUDIO_FILES} 份录音`).test(t), `没写录音份数（应 ${AUDIO_FILES}）：${t.replace(/\n/g, ' ')}`)
+  else assert(/语音合成/.test(t), `没有录音时应标明语音合成：${t.replace(/\n/g, ' ')}`)
   return t.replace(/\n/g, ' · ')
 })
 
 /* ── 2. 词汇 ── */
-await check(`词表：核心 ${V15.units} 单元 / 大纲 ${V45.units} 单元（每 100 词）`, async () => {
+await check(`词表：核心 ${V15.units} 单元${V45 ? ` / 大纲 ${V45.units} 单元` : ''}（每 100 词）`, async () => {
   await clickBy('.card[data-go="v1500"]')
   await page.waitForSelector('.unit')
   const u15 = await page.$$eval('.unit', (els) => els.length)
   assert(u15 === V15.units, `1500 单元数 ${u15}（index.json 说 ${V15.units}）`)
+  if (!V45) return `${u15} 单元（单套词表）`
   await home()
   await clickBy('.card[data-go="vfull"]')
   await page.waitForSelector('.unit')
@@ -233,6 +239,7 @@ await check('默写：错答进错词本', async () => {
 })
 
 await check('大纲词里没有例句的词会明确标注，而不是留一块空白', async () => {
+  if (!FULL_SIZE) return '只有一套词表，跳过'
   const at = await page.evaluate((size) => {
     return CET4.Data.vocab(size).then((list) => {
       const i = list.findIndex((w) => !w.ex)
@@ -291,11 +298,16 @@ await check(`听力菜单：${AUDIO_SETS} 套可听 / ${AUDIO_FILES} 份录音`,
   if (AUDIO.assumed != null) assert(guessed === AUDIO.assumed, `推定标记 ${guessed} 个（index.json 说 ${AUDIO.assumed}）`)
   if (AUDIO.borrowed != null) assert(borrowed === AUDIO.borrowed, `沿用标记 ${borrowed} 个（index.json 说 ${AUDIO.borrowed}）`)
   const head = await $text('.section-title')
-  assert(new RegExp(`${AUDIO_FILES} 份录音`).test(head), `菜单没标出录音文件数：${head.replace(/\n/g, ' ')}`)
+  if (AUDIO_FILES) assert(new RegExp(`${AUDIO_FILES} 份录音`).test(head), `菜单没标出录音文件数：${head.replace(/\n/g, ' ')}`)
+  else {
+    const body = await $text('.wrap')
+    assert(/语音|合成|原创/.test(body), '没有录音时菜单应说明是合成朗读')
+    assert(!/份录音/.test(head), `没有录音却写了「份录音」：${head.replace(/\n/g, ' ')}`)
+  }
   return `${n} 套 / ${groups} 个考期 / ${borrowed} 套沿用 / ${guessed} 份待核对`
 })
 
-await check(`听力：${SAMPLE.listeningQuestions || '?'} 题、8 篇、本地音频能读出时长`, async () => {
+await check(`听力：${SAMPLE.listeningQuestions || '?'} 题、8 篇、能播放`, async () => {
   await page.evaluate((id) => CET4.Listening.start(id), SAMPLE.id)
   await page.waitForSelector('.opt')
   const items = await page.$$eval('.q-item', (els) => els.length)
@@ -304,6 +316,18 @@ await check(`听力：${SAMPLE.listeningQuestions || '?'} 题、8 篇、本地�
   assert(items === SAMPLE.listeningQuestions, `题目 ${items}（index.json 说 ${SAMPLE.listeningQuestions}）`)
   assert(opts === items * 4, `选项 ${opts}（应 ${items * 4}）`)
   assert(pieces === LS_PASSAGES, `篇目按钮 ${pieces}（卷宗说 ${LS_PASSAGES} 篇）`)
+
+  /* 示例卷没有音频文件：走语音合成，不该出现 <audio>，也不该有原文按钮（交卷前） */
+  if (IS_STARTER) {
+    assert(await $exists('.tts-bar'), '示例卷没有语音合成播放条')
+    const speaks = await page.$$eval('[data-speak]', (els) => els.length)
+    assert(speaks === LS_PASSAGES, `朗读按钮 ${speaks}（应 ${LS_PASSAGES}）`)
+    assert(!(await $exists('#ls-audio')), '示例卷不该有 <audio>（包里没有音频文件）')
+    assert(!(await $exists('[data-script]')), '示例卷交卷前不该给原文按钮')
+    await shot('listening-synth')
+    return `${items} 题 / ${pieces} 篇 / 语音合成`
+  }
+
   // 跳转入口只留一排篇目按钮：段落标题里不再重复一个「听本篇」
   const jumps = await page.$$eval('[data-jump]', (els) => els.length)
   assert(jumps === LS_PASSAGES, `跳转按钮 ${jumps} 个（应只有 ${LS_PASSAGES} 个篇目 chip）`)
@@ -325,6 +349,7 @@ await check(`听力：${SAMPLE.listeningQuestions || '?'} 题、8 篇、本地�
 })
 
 await check('听力：按篇跳转把播放头移到本段起点', async () => {
+  if (IS_STARTER) return '示例卷用语音合成，没有时间轴，跳过'
   const target = await page.$eval('[data-jump="B1"]', (el) => ({
     start: Number(el.dataset.start),
     end: Number(el.dataset.end),
@@ -355,6 +380,7 @@ await check('听力：借用第 1 套的卷宗有明确说明', async () => {
 })
 
 await check('听力：原文可展开，且带原文的套才有按钮', async () => {
+  if (IS_STARTER) return '示例卷原文交卷后才给（由下一条验证）'
   if (!SAMPLE.hasTranscript) return '样例卷没有原文，跳过'
   await page.evaluate((id) => CET4.Listening.start(id), SAMPLE.id)
   await page.waitForSelector('[data-script="A1"]')
@@ -387,6 +413,14 @@ await check('听力：交卷后只给答案，不给解析', async () => {
   assert(!(await $exists('.explain')), '出现了 .explain（解析）元素')
   assert(!(await $exists('#ls-submit')), '交卷后还留着“交卷”')
   assert(await $exists('#ls-redo'), '交卷后没有“再做一遍”')
+  if (IS_STARTER) {
+    const scriptBtn = await page.$('[data-script="A1"]')
+    assert(scriptBtn, '示例卷交卷后应该能看原文')
+    await scriptBtn.click()
+    await sleep(220)
+    const open = await page.$eval('#sc-A1', (el) => !el.hidden && el.innerText.length > 100)
+    assert(open, '示例卷原文没展开')
+  }
   const wrong = await page.evaluate(() =>
     CET4.Store.state.wrongBook.filter((w) => w.type === 'listening').length
   )
@@ -587,18 +621,23 @@ await check('设置：只有学习节奏与题库来源，没有 AI 配置', asy
   assert(!(await $exists('#set-model')), '还留着模型输入框')
   const t = await $text('#modal-box')
   assert(/cet4\.state\.v4/.test(t), '没显示存储键')
-  assert(/不带任何真题/.test(t), '没有免责说明')
-  // 绝对路径默认折叠，避免一打开就把本机路径摊在最显眼处
-  assert(await $exists('#set-full[hidden]'), '资料目录的完整路径没有被折叠')
-  const shortSrc = await $text('.src-line')
-  assert(!/[\\/]/.test(shortSrc), `折叠状态仍露出路径分隔符：${shortSrc}`)
+  assert(/不带任何真题|不含任何真题/.test(t), '没有免责说明')
+  if (IS_STARTER) {
+    assert(await $exists('.starter-badge'), '示例模式没标「示例」徽标')
+    assert(await $exists('#set-setup'), '示例模式没给「准备自己的真题」入口')
+  } else {
+    // 绝对路径默认折叠，避免一打开就把本机路径摊在最显眼处
+    assert(await $exists('#set-full[hidden]'), '资料目录的完整路径没有被折叠')
+    const shortSrc = await $text('.src-line')
+    assert(!/[\\/]/.test(shortSrc), `折叠状态仍露出路径分隔符：${shortSrc}`)
+    await clickBy('#set-reveal')
+    await sleep(160)
+    const fullSrc = await $text('#set-full')
+    assert(/[\\/]/.test(fullSrc) && fullSrc.length > shortSrc.length, `展开后没显示完整路径：${fullSrc}`)
+    await clickBy('#set-reveal')
+    await sleep(120)
+  }
   assert(await $exists('.danger-zone #set-reset'), '清空入口不在危险操作区里')
-  await clickBy('#set-reveal')
-  await sleep(160)
-  const fullSrc = await $text('#set-full')
-  assert(/[\\/]/.test(fullSrc) && fullSrc.length > shortSrc.length, `展开后没显示完整路径：${fullSrc}`)
-  await clickBy('#set-reveal')
-  await sleep(120)
   await page.$eval('#set-exam', (el) => {
     el.value = '2027-06-12'
     el.dispatchEvent(new Event('input', { bubbles: true }))
@@ -615,14 +654,14 @@ await check('数据面：词表 / 卷宗 / 音轨索引与 index.json 自洽', a
   const info = await page.evaluate(async (sampleId) => {
     const idx = await CET4.Data.index()
     const v15 = await CET4.Data.vocab(1500)
-    const keys = Object.keys(idx.vocab)
-    const v45 = await CET4.Data.vocab(Number(keys.find((k) => k !== '1500')))
+    const key = Object.keys(idx.vocab).find((k) => k !== '1500')
+    const full = key ? await CET4.Data.vocab(Number(key)) : null
     const p = await CET4.Data.paper(sampleId)
     const withAudio = idx.papers.filter((x) => x.hasAudio).length
     return {
       papers: idx.papers.length,
       v15: v15.length,
-      v45: v45.length,
+      v45: full ? full.length : 0,
       audio: withAudio,
       files: idx.audio?.files || 0,
       assumed: idx.audio?.assumed ?? -1,
@@ -637,7 +676,7 @@ await check('数据面：词表 / 卷宗 / 音轨索引与 index.json 自洽', a
   }, SAMPLE.id)
   assert(info.papers === IDX.papers.length, `卷数 ${info.papers} ≠ index.json ${IDX.papers.length}`)
   assert(info.v15 === V15.total, `核心词 ${info.v15} ≠ index.json ${V15.total}`)
-  assert(info.v45 === V45.total, `大纲词 ${info.v45} ≠ index.json ${V45.total}`)
+  if (V45) assert(info.v45 === V45.total, `大纲词 ${info.v45} ≠ index.json ${V45.total}`)
   assert(info.audio === AUDIO_SETS, `可听套数 ${info.audio} ≠ ${AUDIO_SETS}`)
   assert(info.files === AUDIO_FILES, `录音文件 ${info.files} ≠ ${AUDIO_FILES}`)
   assert(info.transcripts === TRANSCRIBED, `有原文的套数 ${info.transcripts} ≠ ${TRANSCRIBED}`)

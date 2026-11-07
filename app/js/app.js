@@ -40,17 +40,27 @@
         }
       }
 
-      /* 词表加载一次：换算老版本的进度、给「今日复习」建索引 */
+      /* 词表加载一次：换算老版本的进度、给「今日复习」建索引
+         —— 示例题库只有一套词表，所以第二套要按 index.json 的声明来决定加不加载 */
+      const vocabMeta = idx.vocab || {};
+      const hasFull = !!vocabMeta[VFULL];
+      const coreLabel = vocabMeta[V1500]?.label || '核心词';
+      const fullLabel = vocabMeta[VFULL]?.label || '大纲词';
+      const isStarter = idx.kind === 'starter';
       let v1500 = [];
       let vFull = [];
       try {
-        [v1500, vFull] = await Promise.all([CET4.Data.vocab(V1500), CET4.Data.vocab(VFULL)]);
+        v1500 = await CET4.Data.vocab(V1500);
         CET4.Store.migrateDone(V1500, v1500);
-        CET4.Store.migrateDone(VFULL, vFull);
+        if (hasFull) {
+          vFull = await CET4.Data.vocab(VFULL);
+          CET4.Store.migrateDone(VFULL, vFull);
+        }
       } catch (e) {
         App.dataError(e);
         return;
       }
+      const wordTotal = vFull.length || v1500.length;
 
       const learned = CET4.Store.learnedCount();
       const nb = st.notebook.length;
@@ -68,18 +78,28 @@
       const est = CET4.Quiz.estimate();
       const days = CET4.util.daysUntil(st.meta.examDate);
       const due = CET4.Store.reviewDue(1);
-      App._wordMap = new Map(vFull.map((w) => [w.w.toLowerCase(), w]));
+      App._wordMap = new Map((vFull.length ? vFull : v1500).map((w) => [w.w.toLowerCase(), w]));
 
       const audioPapers = idx.papers.filter((p) => p.hasAudio).length;
-      const audioFiles = idx.audio?.files || audioPapers;
+      const audioFiles = idx.audio?.files || 0;
+      const synthPapers = idx.audio?.synth || idx.papers.filter((p) => p.synth).length;
 
       CET4.UI.set(`
         <div class="wrap">
           <div class="hero">
+            ${
+              isStarter
+                ? `<div class="starter-tip">
+                     <span class="starter-badge">示例</span>
+                     <span>现在用的是插件自带的示例内容：426 个自编核心词 + 1 套原创模拟卷（听力由系统语音朗读），<b>不是真题</b>。</span>
+                     <button class="btn btn-ghost btn-sm" id="go-setup">换成我的真题 →</button>
+                   </div>`
+                : ''
+            }
             <h1>今天练哪一块？</h1>
-            <p>词汇、听力、真题、翻译、写作都在这一块面板里 · 进度与作答记录只保存在本机</p>
+            <p>词汇、听力、阅读、翻译、写作都在这一块面板里 · 进度与作答记录只保存在本机</p>
             <div class="hero-stats">
-              <div class="st"><b>${learned}</b>已学单词 / ${vFull.length}</div>
+              <div class="st"><b>${learned}</b>已学单词 / ${wordTotal}</div>
               <div class="st"><b>${quizDone}</b>份已交卷</div>
               <div class="st"><b>${nb}</b>生词本</div>
               <div class="st"><b>${due.length}</b>今日待复习</div>
@@ -100,35 +120,44 @@
           <div class="grid">
             <div class="card" data-go="v1500">
               <div class="card-icon">🔤</div>
-              <h3>核心词 · 约 1500</h3>
+              <h3>${esc(coreLabel)}</h3>
               <p>四级高频词，背单词 / 记单词 / 默写三种模式，中途切换不重置位置。</p>
               <div class="card-meta">
                 <span class="tag">${v1500.length} 词 · ${units1500} 单元</span>
                 <span class="tag ${finished(v1500, units1500) ? 'ok' : ''}">已过完 ${finished(v1500, units1500)} 单元</span>
               </div>
             </div>
-            <div class="card" data-go="vfull">
+            ${
+              hasFull
+                ? `<div class="card" data-go="vfull">
               <div class="card-icon">📚</div>
-              <h3>大纲词 · 约 4500</h3>
+              <h3>${esc(fullLabel)}</h3>
               <p>完整大纲词表，同样的三种模式，每 100 词一个单元。</p>
               <div class="card-meta">
                 <span class="tag">${vFull.length} 词 · ${unitsFull} 单元</span>
                 <span class="tag ${finished(vFull, unitsFull) ? 'ok' : ''}">已过完 ${finished(vFull, unitsFull)} 单元</span>
               </div>
-            </div>
+            </div>`
+                : ''
+            }
             <div class="card" data-go="listening">
               <div class="card-icon">🎧</div>
-              <h3>听力真题</h3>
-              <p>本地录音可按篇目跳听，25 题作答，交卷对答案，原文随时对照。</p>
+              <h3>${isStarter ? '听力练习' : '听力真题'}</h3>
+              <p>${
+                isStarter
+                  ? '原创模拟卷，系统语音朗读，可按篇分听，25 题作答，交卷对答案。'
+                  : '本地录音可按篇目跳听，25 题作答，交卷对答案，原文随时对照。'
+              }</p>
               <div class="card-meta">
-                <span class="tag">${audioPapers} 套可听 · ${audioFiles} 份录音</span>
+                <span class="tag">${audioPapers} 套可听${audioFiles ? ` · ${audioFiles} 份录音` : ''}</span>
+                ${synthPapers ? `<span class="tag">${synthPapers} 套语音合成</span>` : ''}
                 <span class="tag ${listenDone ? 'ok' : ''}">已交卷 ${listenDone}</span>
               </div>
             </div>
             <div class="card" data-go="quiz">
               <div class="card-icon">🎯</div>
               <h3>随机题测试</h3>
-              <p>选词填空 / 长篇阅读 / 仔细阅读，随机抽真题，作答计时并自动保存。</p>
+              <p>选词填空 / 长篇阅读 / 仔细阅读，随机抽卷，作答计时并自动保存。</p>
               <div class="card-meta">
                 <span class="tag">3 种题型</span>
                 <span class="tag ${quizDone ? 'ok' : ''}">${quizDone} 份已交卷</span>
@@ -146,7 +175,7 @@
             <div class="card" data-go="writing">
               <div class="card-icon">📝</div>
               <h3>作文书写</h3>
-              <p>随机抽真题写作题，30 分钟倒计时，实时统计词数与句数。</p>
+              <p>随机抽写作题，30 分钟倒计时，实时统计词数与句数。</p>
               <div class="card-meta">
                 <span class="tag">${idx.papers.filter((p) => p.hasWriting).length} 套</span>
                 <span class="tag">120–180 词</span>
@@ -178,10 +207,16 @@
           </div>
 
           <p class="muted" style="margin-top:22px;font-size:12.5px;line-height:1.8">
-            非官方学习工具：题目、录音与词汇资料均由使用者自行准备并保存在本机，本插件不附带任何真题内容；
-            资料版权归原权利人，请仅用于个人学习。点右上角 ⚙ 可查看资料来源与免责说明。
+            ${
+              isStarter
+                ? '当前显示的是插件内置的示例内容：原创模拟卷与自编词表，不含任何真题、真题录音或真题答案；听力由操作系统语音合成实时朗读，包内没有音频文件。点「换成我的真题」可导入自备资料，版权仍归原权利人。'
+                : '非官方学习工具：题目、录音与词汇资料均由使用者自行准备并保存在本机，本插件不附带任何真题内容；资料版权归原权利人，请仅用于个人学习。点右上角 ⚙ 可查看资料来源与免责说明。'
+            }
           </p>
         </div>`);
+
+      const setupBtn = document.getElementById('go-setup');
+      if (setupBtn) setupBtn.onclick = () => CET4.Setup.render();
 
       CET4.UI.hideBack();
       document.querySelectorAll('.card[data-go]').forEach((el) => {
@@ -209,7 +244,8 @@
       }
       let map = App._wordMap;
       if (!map) {
-        const list = await CET4.Data.vocab(VFULL);
+        const idx = App.idx || (await CET4.Data.index());
+        const list = idx.vocab?.[VFULL] ? await CET4.Data.vocab(VFULL) : await CET4.Data.vocab(V1500);
         map = new Map(list.map((w) => [w.w.toLowerCase(), w]));
         App._wordMap = map;
       }
@@ -297,18 +333,33 @@
             </div>
             <div>
               <h4>题库来源</h4>
-              <div class="src-line">
-                <span>资料目录：<b>${esc(srcName)}</b></span>
-                <button class="btn btn-ghost btn-sm" id="set-reveal">显示完整路径</button>
-              </div>
-              <div class="src-full" id="set-full" hidden><code>${esc(src)}</code></div>
-              <div class="muted" style="font-size:12.5px;line-height:1.8;margin-top:8px">
-                生成时间：${esc(generated)}
-              </div>
-              <p class="muted" style="font-size:12.5px;line-height:1.8;margin-top:10px">
-                本插件只带代码，不带任何真题、录音与词汇数据；题库由使用者在自己的资料目录上运行
-                <code>npm run build:data</code> 生成。资料版权归原权利人，请仅用于个人学习。
-              </p>
+              ${
+                App.idx?.kind === 'starter'
+                  ? `<div class="src-line">
+                       <span>当前：<b>内置示例题库</b></span>
+                       <span class="starter-badge">示例</span>
+                     </div>
+                     <p class="muted" style="font-size:12.5px;line-height:1.8;margin-top:8px">
+                       示例内容随插件分发：426 个自编核心词 + 1 套原创模拟卷。听力由系统语音合成朗读，
+                       包里没有任何音频文件，也不含任何真题内容。
+                     </p>
+                     <p class="muted" style="font-size:12.5px;line-height:1.8;margin-top:6px">
+                       想换成自己的真题，按引导页把 01–05 资料准备好并构建到用户目录即可，示例会自动让位。
+                     </p>
+                     <button class="btn btn-primary btn-sm" id="set-setup" style="margin-top:10px">准备我自己的真题</button>`
+                  : `<div class="src-line">
+                       <span>资料目录：<b>${esc(srcName)}</b></span>
+                       <button class="btn btn-ghost btn-sm" id="set-reveal">显示完整路径</button>
+                     </div>
+                     <div class="src-full" id="set-full" hidden><code>${esc(src)}</code></div>
+                     <div class="muted" style="font-size:12.5px;line-height:1.8;margin-top:8px">
+                       生成时间：${esc(generated)}
+                     </div>
+                     <p class="muted" style="font-size:12.5px;line-height:1.8;margin-top:10px">
+                       本插件只带代码，不带任何真题、录音与词汇数据；题库由使用者在自己的资料目录上运行
+                       <code>npm run build:data</code> 生成。资料版权归原权利人，请仅用于个人学习。
+                     </p>`
+              }
             </div>
           </div>
           <div class="row" style="margin-top:6px">
@@ -333,6 +384,12 @@
             if (!box) return;
             box.hidden = !box.hidden;
             reveal.textContent = box.hidden ? '显示完整路径' : '收起';
+          };
+        const setupBtn = document.getElementById('set-setup');
+        if (setupBtn)
+          setupBtn.onclick = () => {
+            document.getElementById('modal').hidden = true;
+            CET4.Setup.render();
           };
         save.onclick = () => {
           st.meta.examDate = document.getElementById('set-exam').value;
