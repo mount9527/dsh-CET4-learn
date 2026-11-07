@@ -285,6 +285,15 @@ CET4_EMPTY_BASE=http://127.0.0.1:8790/cet4/app/index.html npm run test:e2e
 不属于个人学习的合理使用。把仓库设成 Private 可以自由放数据；公开仓库只放代码最稳妥。
 本 README 也不放真题截图——演示图同样属于对试题内容的复制。
 
+## 发布
+
+- **npm**：`npm publish`（或打 `v*` tag 走 [.github/workflows/release.yml](https://github.com/mount9527/dsh-CET4-learn/blob/main/.github/workflows/release.yml)），
+  仓库 Secrets 里需要 `NPM_TOKEN`。包内容由 `package.json` 的 `files` 白名单决定，
+  只有代码与文档；`data/`、`data-pack/`、`.cache/` 都不会进包。
+- **插件市场**：用同一版本号发布 npm 后，在市场上提交包名 `dsh-cet4` 即可（入口以市场说明为准）。
+- **GitHub**：代码仓公开；**数据不要推到公开仓库**（见上一节）。要给数据做版本管理就开一个私有仓。
+- 发布物与 README 都不放真题截图，原因同上。
+
 ## 许可
 
 代码 MIT（见 `LICENSE`）。**许可不覆盖题库内容**：真题、录音、词汇资料的版权归原权利人，

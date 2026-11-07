@@ -1,0 +1,28 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      # 只跑不依赖题库的检查（e2e 需要本机题库，不在 CI 里跑）
+      - run: node build/test-client.mjs
+      - name: 确认发布包不含题库/录音
+        run: |
+          node -e "const fs=require('fs');const p=require('./package.json');const bad=p.files.filter(f=>/^(data|data-pack|\.cache)\//.test(f));if(bad.length){console.error('files 白名单里出现数据目录:',bad);process.exit(1)}console.log('files ok:',p.files.length,'entries')"
+      - run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
